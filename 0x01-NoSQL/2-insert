@@ -1,6 +1,4 @@
 // insert a document into a collection
-use argv[1]
-
-db.school.insertOne({
+db.school.insert({
   "name": "Holberton school"
-})
+});
