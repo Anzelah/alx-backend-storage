@@ -14,7 +14,7 @@ all_docs = col.count_documents({})
 methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 method_docs = {col.count_documents({"method": m} for m in methods)
 
-match_docs = col.count_documents({"method": "GET"}, {"path": "/status"})
+match_docs = col.count_documents({"method": "GET", "path": "/status"})
 
 print(f"{all_docs} logs")
 print("Methods:")
