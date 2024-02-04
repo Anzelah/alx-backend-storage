@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Import your modules"""
 
-import pymongo
 from pymongo import MongoClient
+"""Import the mongoclient module"""
 
 
 client = MongoClient()
