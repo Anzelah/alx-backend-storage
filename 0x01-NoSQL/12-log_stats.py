@@ -2,24 +2,22 @@
 """Import your modules"""
 
 from pymongo import MongoClient
-"""Import the mongoclient module"""
 
 
-client = MongoClient()
+if __name__ == "__main__":
 
-db = client.logs
-col = db.nginx
+    client = MongoClient()
+    db = client.logs
+    col = db.nginx
 
-all_docs = col.count_documents({})
+    all_docs = col.count_documents({})
 
-methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-method_docs = {col.count_documents({"method": m} for m in methods)}
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    method_docs = {col.count_documents({"method": m} for m in methods)}
+    match_docs = col.count_documents({"method": "GET", "path": "/status"})
 
-match_docs = col.count_documents({"method": "GET", "path": "/status"})
-
-print(f"{all_docs} logs")
-print("Methods:")
-for met in methods:
-    print(f"\tmethod {met}: {method_docs[met]}")
-
-print(f"{match_docs} status check")
+    print(f"{all_docs} logs")
+    print("Methods:")
+    for met in methods:
+        print(f"\tmethod {met}: {method_docs[met]}")
+    print(f"{match_docs} status check")
