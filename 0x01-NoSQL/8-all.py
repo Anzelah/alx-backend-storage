@@ -7,5 +7,4 @@ def list_all(mongo_collection):
     doc = mongo_collection.find()
     if doc:
         return doc
-    else:
-        return []
+    return []
