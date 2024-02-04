@@ -11,13 +11,18 @@ if __name__ == "__main__":
     col = db.nginx
 
     all_docs = col.count_documents({})
-
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    method_docs = {col.count_documents({"method": m} for m in methods)}
+    get_docs = col.count_documents({"method": "GET"})
+    post_docs = col.count_documents({"method": "POST"})
+    put_docs = col.count_documents({"method": "PUT"})
+    patch_docs = col.count_documents({"method": "PATCH"})
+    del_docs = col.count_documents({"method": "DELETE"})
     match_docs = col.count_documents({"method": "GET", "path": "/status"})
 
-    print(f"{all_docs} logs")
+    print("{} logs" .format(all_docs))
     print("Methods:")
-    for met in methods:
-        print(f"\tmethod {met}: {method_docs[met]}")
-    print(f"{match_docs} status check")
+    print("\tmethod GET: {}" .format(get_docs))
+    print("\tmethod POST: {}" .format(post_docs))
+    print("\tmethod PUT: {}" .format(put_docs))
+    print("\tmethod PATCH: {}" .format(patch_docs))
+    print("\tmethod DELETE: {}" .format(del_docs))
+    print("{} status check" .format(match_docs))
