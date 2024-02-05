@@ -43,7 +43,18 @@ def call_history(method: Callable) -> Callable:
         
         #return previous output from when our wrapped function executed
         return output
+    
+    def replay(self, input_key, output_key):
+        """Display the history of calls of a particular function."""
+
+        inputs = self._redis.lrange(input_key, 0, -1)
+        outputs = self._redis.lrange(output_key, 0, -1)
+        for i, o in zip(inputs, outputs):
+            print("{} -> {}" .format(i, o))
+
     return wrapper 
+
+
 
 class Cache:
     """Create a cache class"""
