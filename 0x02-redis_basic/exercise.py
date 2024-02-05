@@ -19,10 +19,22 @@ class Cache:
         self._redis.set(random_key, data)
         return random_key
 
-    def get(key: str, fn=None):
+    def get(self.key: str, fn=None) -> any:
         """Get your data from redis db"""
         if not self._redis.exists(key):
-            return None
-        
+            return None 
         return self._redis.get(key).fn()
 
+    def get_str(self, key: str, fn=None) -> str:
+        """Use correct conversion function depending on value returned"""
+        val = self.get(key)
+        if fn:
+            return fn(val)
+        return str(val)
+
+    def get_int(self, key: str, fn-None) -> int:
+         """Use correct conversion function depending on value returned"""
+        val = self.get(key)
+        if fn:
+            return fn(val)
+        return int(val)
