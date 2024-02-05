@@ -18,7 +18,20 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwds)
     return wrapper
 
+def call_history(method: Callable) -> Callable:
+    @wraps(method)
+    def wrapper(self, *args, **kwds):
+        input_key = ("{}:inputs" .format(method.__qualname__))
+        output_key = ("{}:outputs" .format(method.__qualname__))
+        
+        input_params = str(args)
+        self._redis.rpush(input_key, input_params)
+        output = method(self, *args, **kwds)
+        output_serialize = str(output)
+        self._redis.rpush(output_key, output_serialize)
 
+        return output
+    return wrapper 
 
 class Cache:
     """Create a cache class"""
@@ -28,13 +41,13 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Store your data into redis"""
         random_key = str(uuid4())
         self._redis.set(random_key, data)
         return random_key
     
-    @count_calls
     def get(self, key: str, fn=None) -> any:
         """Get your data from redis db"""
         val = self._redis.get(key)
@@ -42,13 +55,11 @@ class Cache:
             return fn(val)
         return val
 
-    @count_calls
     def get_str(self, key: str) -> str:
         """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
         return val.decode("utf-8")
     
-    @count_calls
     def get_int(self, key: str) -> int:
         """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
