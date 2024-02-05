@@ -81,4 +81,4 @@ def replay(method: Callable):
     inputs = slf.lrange(input_key, 0, -1)
     outputs = slf.lrange(output_key, 0, -1)
     for i, o in list(zip(inputs, outputs)):
-        ("{}(*{}) -> {}" .format(met, i, o))
+        print("{}(*{}) -> {}" .format(met, i, o))
