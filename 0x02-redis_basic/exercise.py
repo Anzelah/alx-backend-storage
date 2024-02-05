@@ -80,5 +80,7 @@ def replay(method: Callable):
 
     inputs = slf.lrange(input_key, 0, -1)
     outputs = slf.lrange(output_key, 0, -1)
-    for i, o in list(zip(inputs, outputs)):
-        print("{}(*{}) -> {}" .format(met, i, o))
+    for i, o in zip(inputs, outputs):
+        attr = i.decode("utf-8")
+        values = 0.decode("utf-8")
+        print("{}(*{}) -> {}" .format(met, attr, values))
