@@ -76,7 +76,7 @@ def replay(method: Callable):
 
     slf = method.__self__._redis
     count = slf.get(met).decode("utf=8")
-    print("{} was called {} times" .format(met, count))
+    print("{} was called {} times:" .format(met, count))
 
     inputs = slf.lrange(input_key, 0, -1)
     outputs = slf.lrange(output_key, 0, -1)
