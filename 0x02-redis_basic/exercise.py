@@ -23,7 +23,7 @@ class Cache:
         """Get your data from redis db"""
         if not self._redis.exists(key):
             return None 
-        return self._redis.get(key).fn()
+        return self._redis.get(key)
 
     def get_str(self, key: str, fn=None) -> str:
         """Use correct conversion function depending on value returned"""
