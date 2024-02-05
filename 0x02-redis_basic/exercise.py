@@ -24,36 +24,14 @@ def call_history(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(self, *args, **kwds):
         """Wrapper function to implement counting logic"""
-        #create keys for output and input lists to be used
         input_key = ("{}:inputs" .format(method.__qualname__))
         output_key = ("{}:outputs" .format(method.__qualname__))
         
-        #ensure arguments when method is called are str for redis
-        input_params = str(args)
-
-        #add input parameters to our created list everytime function is called
-        self._redis.rpush(input_key, input_params)
-
-        #execute the wrapped function to get output of our input
+        self._redis.rpush(input_key, str(args))
         output = method(self, *args, **kwds)
-
-        #serialize this as well before adding to our created list
-        output_serialize = str(output)
-        self._redis.rpush(output_key, output_serialize)
-        
-        #return previous output from when our wrapped function executed
+        self._redis.rpush(output_key, str(output))
         return output
-    
-    def replay(self, input_key, output_key):
-        """Display the history of calls of a particular function."""
-
-        inputs = self._redis.lrange(input_key, 0, -1)
-        outputs = self._redis.lrange(output_key, 0, -1)
-        for i, o in zip(inputs, outputs):
-            print("{} -> {}" .format(i, o))
-
     return wrapper 
-
 
 
 class Cache:
@@ -87,3 +65,14 @@ class Cache:
         """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
         return int(val.decode("utf-8"))
+    
+
+def replay(method: Callable):
+    """Display the history of calls of a particular function."""
+    input_key = ("{}:inputs" .format(method.__qualname__))
+    output_key = ("{}:outputs" .format(method.__qualname__))
+
+    inputs = self._redis.lrange(input_key, 0, -1)
+    outputs = self._redis.lrange(output_key, 0, -1)
+    for i, o in zip(inputs, outputs):
+        ("{} -> {}" .format(i, o))
