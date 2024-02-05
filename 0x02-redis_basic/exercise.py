@@ -21,18 +21,17 @@ class Cache:
 
     def get(self, key: str, fn=None) -> any:
         """Get your data from redis db"""
-        if not self._redis.exists(key):
-            return None 
-        return self._redis.get(key)
-
-    def get_str(self, key: str, fn=None) -> str:
-        """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
         if fn:
             return fn(val)
+        return val
 
-    def get_int(self, key: str, fn=None) -> int:
+    def get_str(self, key: str) -> str:
         """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
-        if fn:
-            return fn(val)
+        return val.decode("utf-8")
+
+    def get_int(self, key: str) -> int:
+        """Use correct conversion function depending on value returned"""
+        val = self._redis.get(key)
+        return int(val.decode("utf-8"))
