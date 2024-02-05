@@ -33,7 +33,7 @@ class Cache:
         return str(val)
 
     def get_int(self, key: str, fn=None) -> int:
-         """Use correct conversion function depending on value returned"""
+        """Use correct conversion function depending on value returned"""
         val = self._redis.get(key)
         if fn:
             return fn(val)
