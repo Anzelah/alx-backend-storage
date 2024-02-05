@@ -19,17 +19,29 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 def call_history(method: Callable) -> Callable:
+    """Decorator to store the history of inputs and
+    outputs for a particular function"""
     @wraps(method)
     def wrapper(self, *args, **kwds):
+        """Wrapper function to implement counting logic"""
+        #create keys for output and input lists to be used
         input_key = ("{}:inputs" .format(method.__qualname__))
         output_key = ("{}:outputs" .format(method.__qualname__))
         
+        #ensure arguments when method is called are str for redis
         input_params = str(args)
+
+        #add input parameters to our created list everytime function is called
         self._redis.rpush(input_key, input_params)
+
+        #execute the wrapped function to get output of our input
         output = method(self, *args, **kwds)
+
+        #serialize this as well before adding to our created list
         output_serialize = str(output)
         self._redis.rpush(output_key, output_serialize)
-
+        
+        #return previous output from when our wrapped function executed
         return output
     return wrapper 
 
