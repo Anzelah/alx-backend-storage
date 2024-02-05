@@ -37,4 +37,8 @@ class Cache:
         val = self._redis.get(key)
         if fn:
             return fn(val)
-        return int(val)
+        else:
+            try:
+                return int(val)
+            except Exception:
+                return None
